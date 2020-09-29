@@ -4,7 +4,11 @@
       <td
         v-for="day in item.list"
         :key="day.date"
-        :class="{ 'date-patch': day.patch, 'date-now': day.now }"
+        :class="{
+          'date-normal': !day.patch,
+          'date-patch': day.patch,
+          'date-now': day.now
+        }"
         @click="!day.patch && dateClicked(day)"
       >
         {{ day.date }}
@@ -38,9 +42,9 @@ td {
   cursor: pointer;
   text-align: center;
   height: 32px;
-  &:hover {
-    color: #409eff;
-  }
+}
+.date-normal:hover {
+  color: #409eff;
 }
 .date-patch {
   color: #c0c4cc;
