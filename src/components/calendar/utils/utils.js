@@ -53,7 +53,7 @@ export const getWeekOfDate = (year, month, day) => {
   }
   if (day > count) {
     month = month + 1
-    day = getDate(year, month, day - count + 1)
+    day = getDate(year, month, day - count - 1)
   }
 
   const date = new Date(year + '-' + month + '-' + day)

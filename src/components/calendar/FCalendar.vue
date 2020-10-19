@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       select: {
-        fullDate: '请选择'
+        fullDate: '请选择',
+        timeStamp: 1600486210000
       }
     }
   },
@@ -46,7 +47,7 @@ export default {
     },
     rows() {
       let rows = []
-      const date = new Date('2020-09-01')
+      const date = new Date(this.select.timeStamp)
       let year = date.getFullYear()
       let month = date.getMonth()
       let dateCount = getCountOfMonth(year, month)
@@ -70,6 +71,7 @@ export default {
           ]
         })
         startTime += 7
+        console.log(rows)
         for (let row of rows) {
           if (row.list.length < 7) {
             // 等于1或这个月最后一天时需要进行数组长度补位
@@ -106,24 +108,32 @@ export default {
                 timeStamp: new Date(fullDate).getTime()
               })
             }
-            /* row.list.sort((x, y) => {
-              return x.date - y.date
-            }) */
           }
         }
-        /* for (let row of rows) {
-          for (let i = 0; i < row.length; i++) {
-            row.push({ week })
-          }
-        } */
       }
-      console.log(rows)
       return rows
     }
   },
   methods: {
     dateClicked(day) {
+      console.log(day)
       this.select = day
+    },
+    nextYear() {
+      const nowYear = new Date(this.select.timeStamp).getFullYear()
+      const nowMonth = new Date(this.select.timeStamp).getMonth() + 1
+      const nowDate = new Date(this.select.timeStamp).getDate()
+      this.select.timeStamp = new Date(
+        `${nowYear + 1}-${nowMonth}-${nowDate}`
+      ).getTime()
+    },
+    lastYear() {
+      const nowYear = new Date(this.select.timeStamp).getFullYear()
+      const nowMonth = new Date(this.select.timeStamp).getMonth() + 1
+      const nowDate = new Date(this.select.timeStamp).getDate()
+      this.select.timeStamp = new Date(
+        `${nowYear - 1}-${nowMonth}-${nowDate}`
+      ).getTime()
     }
   }
 }
@@ -132,7 +142,7 @@ export default {
 <style lang="scss" scoped>
 .clendar {
   width: 292px;
-  margin: 0 auto;
+  // margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border: 1px solid #e4e7ed;
   border-radius: 4px;
