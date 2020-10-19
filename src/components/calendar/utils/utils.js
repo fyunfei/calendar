@@ -16,11 +16,10 @@ export const getCountOfMonth = (year, month) => {
 export const getDate = (year, month, day) => {
   let count = getCountOfMonth(year, month)
   if (day <= 0) {
-    month = month - 1
-    count = getCountOfMonth(year, month)
+    count = getCountOfMonth(year, month - 1)
     day = count + day
   } else if (day > count) {
-    month = month + 1
+    month = month + 1 + 1
     // count = getCountOfMonth(year, month)
     day = day - count
   }
@@ -44,19 +43,19 @@ export const isNow = (date) => {
  * @param {*} day
  */
 export const getWeekOfDate = (year, month, day) => {
-  month = month + 1
   let count = getCountOfMonth(year, month)
   if (day <= 0) {
-    month = month - 1
     day = getDate(year, month, day)
     count = getCountOfMonth(year, month)
   }
-  if (day > count) {
+  if (day > 0 && day <= count) {
     month = month + 1
-    day = getDate(year, month, day - count - 1)
   }
-
-  const date = new Date(year + '-' + month + '-' + day)
+  if (day > count) {
+    month = month + 1 + 1
+    day = day - count
+  }
+  const date = new Date(`${year}-${month}-${day}`)
   switch (date.getDay()) {
     case 1:
       return 'Mon'
