@@ -42,7 +42,7 @@ export default {
     return {
       select: {
         fullDate: '请选择',
-        timeStamp: Date.now()
+        timeStamp: 1606801744000
       }
     }
   },
@@ -203,7 +203,7 @@ export default {
           break
         case 'next':
           time = `${nowYear}-${nowMonth + 1}-${1}`
-          if (nowMonth === 1) {
+          if (nowMonth === 12) {
             time = `${nowYear + 1}-1-1`
           }
           break

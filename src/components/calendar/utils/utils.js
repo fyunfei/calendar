@@ -45,14 +45,25 @@ export const isNow = (date) => {
 export const getWeekOfDate = (year, month, day) => {
   let count = getCountOfMonth(year, month)
   if (day <= 0) {
-    day = getDate(year, month, day)
-    count = getCountOfMonth(year, month)
+    if (month <= 0) {
+      day = getDate(year + 1, month + 1, day)
+      count = getCountOfMonth(year + 1, month + 1)
+    } else {
+      day = getDate(year, month, day)
+      count = getCountOfMonth(year, month)
+    }
   }
   if (day > 0 && day <= count) {
     month = month + 1
   }
   if (day > count) {
-    month = month + 1 + 1
+    if (month + 1 + 1 > 12) {
+      month = 1
+      year = year + 1
+    } else {
+      month = month + 1 + 1
+    }
+
     day = day - count
   }
   const date = new Date(`${year}-${month}-${day}`)
