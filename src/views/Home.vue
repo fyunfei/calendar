@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <f-calendar></f-calendar>
+    <f-calendar @date-clicked="dateClicked"></f-calendar>
   </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
   name: 'home',
   components: {
     FCalendar
+  },
+  methods: {
+    dateClicked(item) {
+      console.log(item)
+    }
   }
 }
 </script>

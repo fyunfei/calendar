@@ -30,7 +30,6 @@ export default {
   methods: {
     // @todo 年月选择
     dateClicked(day) {
-      console.log(day)
       this.$emit('dateClicked', day)
     }
   }

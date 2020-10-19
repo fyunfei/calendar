@@ -66,6 +66,7 @@ export const getWeekOfDate = (year, month, day) => {
 
     day = day - count
   }
+  // console.log(`${year}-${month}-${day}`)
   const date = new Date(`${year}-${month}-${day}`)
   switch (date.getDay()) {
     case 1:

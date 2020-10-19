@@ -84,7 +84,6 @@ export default {
           ]
         })
         startTime += 7
-        console.log(rows)
         for (let row of rows) {
           if (row.list.length < 7) {
             // 获取当前星期代表的数字 用来表示向前补位和向后补位的数量
@@ -109,7 +108,7 @@ export default {
                 row.startTime + n > dateCount ? month + 1 + 1 : month + 1
               }-${getDate(year, month, row.startTime + n)}`
               row.list.push({
-                week: getWeekOfDate(year, month + 1, row.startTime + n),
+                week: getWeekOfDate(year, month, row.startTime + n),
                 date: getDate(year, month, row.startTime + n),
                 patch: row.startTime + n > dateCount,
                 fullDate,
@@ -170,8 +169,8 @@ export default {
   },
   methods: {
     dateClicked(day) {
-      console.log(day)
       this.select = day
+      this.$emit('date-clicked', day)
     },
     nextYear() {
       const nowYear = new Date(this.select.timeStamp).getFullYear()
