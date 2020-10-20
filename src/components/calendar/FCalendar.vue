@@ -2,8 +2,12 @@
   <div>
     <div class="clendar">
       <div class="clendar-tool">
-        <div class="clendar-month_prev" @click="changeYear('prev')">上个月</div>
-        <div class="clendar-month_next" @click="changeYear('next')">下个月</div>
+        <div class="clendar-month_prev" @click="changeMonth('prev')">
+          上个月
+        </div>
+        <div class="clendar-month_next" @click="changeMonth('next')">
+          下个月
+        </div>
         <div class="clendar-header">
           {{ selectTime }}
         </div>
@@ -42,7 +46,7 @@ export default {
     return {
       select: {
         fullDate: '请选择',
-        timeStamp: 1606801744000
+        timeStamp: Date.now()
       }
     }
   },
@@ -64,10 +68,20 @@ export default {
       let year = date.getFullYear() // 选中日期的年份
       let month = date.getMonth() // 选中日期的月份
       let dateCount = getCountOfMonth(year, month) // 获取当前月份的时间总数
+      /*  用来表示当前行与1号并列的日期，作为标记字段
+          用来做向前向后的补位，
+          例如：2020-10月，因为1号是周四，根据当前布局，需要补位4个日期，由规律可知周四（getDay()===4） */
       let startTime = 1
       // let dateWeek = getWeekOfDate(year, month, date)
       for (let i = 0; i < 6; i++) {
         let week = getWeekOfDate(year, month, startTime)
+        const fullDate = `${year}-${
+          startTime > dateCount
+            ? month + 1 + 1 > 12
+              ? 1
+              : month + 1 + 1
+            : month + 1
+        }-${getDate(year, month, startTime)}`
         rows.push({
           row: i + 1,
           week,
@@ -77,9 +91,9 @@ export default {
               week: week,
               date: getDate(year, month, startTime),
               patch: startTime > dateCount,
-              now: isNow(new Date(`2020-${month + 1}-${startTime}`)),
-              timeStamp: new Date(`2020-${month + 1}-${startTime}`).getTime(),
-              fullDate: `2020-${month + 1}-${startTime}`
+              now: isNow(new Date(`${year}-${month + 1}-${startTime}`)),
+              timeStamp: new Date(fullDate).getTime(),
+              fullDate: fullDate
             }
           ]
         })
@@ -88,11 +102,16 @@ export default {
           if (row.list.length < 7) {
             // 获取当前星期代表的数字 用来表示向前补位和向后补位的数量
             let nowWeek = translateWeekToNumber(row.week)
-            let patchPreNum = nowWeek
-            let patchNextNum = 7 - nowWeek - 1 // 星期数字表示周日~六用0~6表示
+            let patchPreNum = nowWeek // 标记字段前需要补位数
+            let patchNextNum = 7 - nowWeek - 1 // 标记字段后需要补位数 星期数字表示周日~六用0~6表示
             for (let m = 1; m <= patchPreNum; m++) {
+              // startTime - m <= 0 表示当前需要补位的日期为上个月的日期
               const fullDate = `${year}-${
-                row.startTime - m === 0 ? month : month + 1
+                row.startTime - m <= 0
+                  ? month
+                  : row.startTime - m > dateCount
+                  ? month + 1 + 1
+                  : month + 1
               }-${getDate(year, month, row.startTime - m)}`
               row.list.unshift({
                 week: getWeekOfDate(year, month, row.startTime - m),
@@ -157,6 +176,7 @@ export default {
           }
         } */
       }
+      console.log(rows)
       return rows
     }
   },
@@ -169,6 +189,7 @@ export default {
   },
   methods: {
     dateClicked(day) {
+      console.log(day)
       this.select = day
       this.$emit('date-clicked', day)
     },
@@ -188,7 +209,7 @@ export default {
         `${nowYear - 1}-${nowMonth}-${nowDate}`
       ).getTime()
     },
-    changeYear(flag) {
+    changeMonth(flag) {
       let time
       const nowYear = new Date(this.select.timeStamp).getFullYear()
       const nowMonth = new Date(this.select.timeStamp).getMonth() + 1
@@ -215,13 +236,17 @@ export default {
 
 <style lang="scss" scoped>
 .clendar {
-  width: 292px;
+  width: 40%;
+  min-width: 307px;
   // margin: 0 auto;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #e4e7ed;
+  border: 1px solid transparent;
   border-radius: 4px;
   padding: 12px;
   margin-bottom: 200px;
+  transition: box-shadow 300ms ease;
+  &:hover {
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  }
   &-tool {
     position: relative;
     .clendar-month_next,

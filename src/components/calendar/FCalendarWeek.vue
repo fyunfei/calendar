@@ -39,7 +39,8 @@ export default {
 
 <style lang="scss" scoped>
 th {
-  width: 40px;
+  min-width: 40px;
+  width: 1%;
   height: 40px;
   padding: 5px;
   text-align: center;
